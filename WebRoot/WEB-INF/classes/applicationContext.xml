@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" xmlns:tx="http://www.springframework.org/schema/tx">
+
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/music">
+		</property>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="ldf3291369"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+<!-- 				<prop key="hibernate.show_sql">true</prop> -->
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/jhdx/model/entity/Songlist.hbm.xml</value>
+				<value>com/jhdx/model/entity/Singertype.hbm.xml</value>
+				<value>com/jhdx/model/entity/Dvdstatus.hbm.xml</value>
+				<value>com/jhdx/model/entity/Dvdtype.hbm.xml</value>
+				<value>
+					com/jhdx/model/entity/Songlistdetails.hbm.xml
+				</value>
+				<value>com/jhdx/model/entity/Singer.hbm.xml</value>
+				<value>com/jhdx/model/entity/Dvddetails.hbm.xml</value>
+				<value>com/jhdx/model/entity/Dvd.hbm.xml</value>
+				<value>com/jhdx/model/entity/Userstatus.hbm.xml</value>
+				<value>com/jhdx/model/entity/Songtype.hbm.xml</value>
+				<value>com/jhdx/model/entity/Role.hbm.xml</value>
+				<value>com/jhdx/model/entity/Song.hbm.xml</value>
+				<value>com/jhdx/model/entity/Uploadsong.hbm.xml</value>
+				<value>com/jhdx/model/entity/Comment.hbm.xml</value>
+				<value>com/jhdx/model/entity/Dowloadsong.hbm.xml</value>
+				<value>com/jhdx/model/entity/User.hbm.xml</value>
+				<value>com/jhdx/model/entity/Songstatus.hbm.xml</value></list>
+		</property></bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+<!-- 	用户相关的bean -->
+	<bean id="userdao" class="com.jhdx.model.dao.impl.UserDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="userservice" class="com.jhdx.model.service.impl.UserServiceImpl">
+	<property name="userdao" ref="userdao"></property>
+	</bean>
+	
+	<bean id="useraction" class="com.jhdx.control.action.UserAction" scope="prototype">
+	<property name="userService" ref="userservice"></property>
+	</bean>
+<!-- 	专辑的相关的bean -->
+	<bean id="albumdao" class="com.jhdx.model.dao.impl.AlbumDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="albumservice" class="com.jhdx.model.service.impl.AlbumServiceImpl">
+	<property name="albumdao" ref="albumdao"></property>
+	</bean>
+	
+	<bean id="albumaction" class="com.jhdx.control.action.AlbumAction" scope="prototype">
+	<property name="albumService" ref="albumservice"></property>
+	</bean>
+	
+	
+<!-- 	首页的action -->
+	<bean id="indexaction" class="com.jhdx.control.action.IndexAction" scope="prototype">
+	<property name="albumService" ref="albumservice"></property>
+	<property name="songService" ref="songservice"></property>
+	<property name="songListService" ref="songlistservice"></property>
+	</bean>
+<!-- AJAX测试临时bean -->
+		<bean id="ajaxaction" class="com.jhdx.control.action.AjaxTestAction" scope="prototype">
+		</bean>
+<!-- 		歌曲Song相关的bean -->
+	<bean id="songdao" class="com.jhdx.model.dao.impl.SongDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="songservice" class="com.jhdx.model.service.impl.SongServiceImpl">
+	<property name="songdao" ref="songdao"></property>
+	</bean>
+	
+	<bean id="songaction" class="com.jhdx.control.action.SongAction" scope="prototype">
+	<property name="songService" ref="songservice"></property>
+	</bean>
+<!-- 	歌单SongList相关的bean -->
+	<bean id="songlistdao" class="com.jhdx.model.dao.impl.SongListDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="songlistservice" class="com.jhdx.model.service.impl.SongListServiceImpl">
+	<property name="songListdao" ref="songlistdao"></property>
+	</bean>
+	
+	<bean id="songlistaction" class="com.jhdx.control.action.SongListAction" scope="prototype">
+	<property name="songService" ref="songservice"></property>
+	<property name="songListService" ref="songlistservice"></property>
+	</bean>
+	
+	<!-- 	歌手类型相关的bean -->
+	<bean id="singertypedao" class="com.jhdx.model.dao.impl.SingerTypeDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="singertypeservice" class="com.jhdx.model.service.impl.SingerTypeServiceImpl">
+	<property name="singertypedao" ref="singertypedao"></property>
+	</bean>
+	
+	<bean id="singertypeaction" class="com.jhdx.control.action.SingerTypeAction" scope="prototype">
+	<property name="singerTypeService" ref="singertypeservice"></property>
+	</bean>
+	
+<!-- 	歌手Singer相关的bean -->
+	<bean id="singerdao" class="com.jhdx.model.dao.impl.SingerDaoImpl">
+	<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="singerservice" class="com.jhdx.model.service.impl.SingerServiceImpl">
+	<property name="singerdao" ref="singerdao"></property>
+	</bean>
+
+	<bean id="singeraction" class="com.jhdx.control.action.SingerAction" scope="prototype">
+	<property name="singerService" ref="singerservice"></property>
+	<property name="singerTypeService" ref="singertypeservice"></property>
+	<property name="songService" ref="songservice"></property>
+	<property name="PAGESIZE" value="10"></property>
+	</bean>
+	
+
+
+	
+	
+	</beans>

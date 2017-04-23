@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<package name="Music_01" extends="json-default,struts-default">
+<!-- 用户相关action -->
+<action name="userAction" class="useraction">
+<result name="success">/success.jsp</result>
+<result name="error">/error.jsp</result>
+<result name="index">/show.jsp</result>
+<result type="json" name="ajax">
+<param name="root">ajaxFlag</param>
+</result>
+</action>
+<!-- 首页显示action -->
+<action name="indexAction" class="indexaction">
+<result name="success">/show.jsp</result>
+</action>
+<!-- ajax测试action -->
+<action name="ajaxtestAction" class="ajaxaction" >
+<result type="json" name="success">
+<param name="root">dataMap</param>
+</result>
+</action>
+<!-- 关于歌曲Song的action -->
+<action name="songAction" class="songaction">
+<result type="json" name="success">
+<param name="root">dataList</param>
+</result>
+<result name="songRank">/topList.jsp</result>
+</action>
+<!-- 关于专辑album的action -->
+<action name="albumAction" class="albumaction">
+<result type="json" name="success" >
+<param name="root">dataList</param>
+</result>
+<result name="albumDetatils">/albumDetails.jsp</result>
+<result name="allAlbum">/album.jsp</result>
+</action>
+<!-- 关于歌手Singer的action -->
+<action name="singerAction" class="singeraction">
+<result name="success" >/singer.jsp</result>
+<result name="page" type="redirectAction">
+<param name="actionName">singerAction</param>
+<param name="method">showSingerByPage</param>
+</result>
+<result name="singerDetails">/singerdetails.jsp</result>
+</action>
+<!-- 关于歌单SongList的action -->
+
+<action name="songListAction" class="songlistaction">
+<result name="success">/usercenter.jsp</result>
+<result name="manger">/manger.jsp</result>
+<result name="playSongList" type="json">
+<param name="root">dataList</param>
+</result>
+<result name="playListDetails">/playListDetails.jsp</result>
+</action>
+</package>
+</struts>    
